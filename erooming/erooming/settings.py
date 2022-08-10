@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
+import datetime #56에서 시작되는 JWT_AUTH 의 토큰 유효기간을 설정하기 위한 datetime import
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,35 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+###############################
+APPEND_SLASH = False # 추가 안해줄시 기본값이 True인데 그 경우 urls.py에서 경로설정시 주소 끝에 /를 붙이고 
+#해당경로로 /를 붙이지 않고 접속시 페이지를 찾을 수 없기때문에 리다이렉트를 시켜 자동으로 /를 붙여서 경로를 찾는다.
+#이 경우 문제가 될 수 있기때문에 false로 값을 지정해줬다.
+
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000'] #아까 설치한 corsheaders로 해당 서버와 연결할 서버의 url을 작성해준모습
+
+# Application definition
+
+REST_FRAMEWORK = { # 추가
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  #인증된 회원만 액세스 허용
+        'rest_framework.permissions.AllowAny',         #모든 회원 액세스 허용
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': ( #api가 실행됬을 때 인증할 클래스를 정의해주는데 우리는 JWT를 쓰기로 했으니
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication', #이와 같이 추가해준 모습이다.
+    ),
+}
+
+JWT_AUTH = { # 추가
+   'JWT_SECRET_KEY': SECRET_KEY,
+   'JWT_ALGORITHM': 'HS256',
+   'JWT_VERIFY_EXPIRATION' : True, #토큰검증
+   'JWT_ALLOW_REFRESH': True, #유효기간이 지나면 새로운 토큰반환의 refresh
+   'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=30),  # Access Token의 만료 시간
+   'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=3), # Refresh Token의 만료 시간
+   'JWT_RESPONSE_PAYLOAD_HANDLER': 'api.custom_responses.my_jwt_response_handler'
+}
+###############################
 
 # Application definition
 
@@ -39,9 +69,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'api.apps.ApiConfig',
+    
+    ###############################
+    'rest_framework',
+    'rest_framework_jwt',
+    'corsheaders',
+    ###############################
 ]
 
 MIDDLEWARE = [
+    ###############################
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    ###############################
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -107,19 +147,23 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul' # 후에 작성한 게시물에 날짜를 표현하기 위해서 
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False # Use_TZ를 false로 설정해서 우리나라 시간을 가져온 모습이다.
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static') #개발자가 관리하는 파일들
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #사용자가 업로드한 파일 관리
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
