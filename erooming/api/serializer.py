@@ -12,7 +12,7 @@ class RoutineSerializer(serializers.ModelSerializer):
     class Meta:
         model = Routine
         fields = ['id', 'title', 'max_people_number', 'now_people_number',
-                  'description', 'start_date', 'end_date', 'max_count', 'created_at', 'status']
+                  'description', 'start_date', 'end_date', 'max_count', 'status']
 
 
 class UserRoutineSerializer(serializers.ModelSerializer):

@@ -17,7 +17,7 @@ class Routine(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     max_count = models.IntegerField()
-    created_at = models.DateField(auto_now_add=True)  # auto_now는 수정일자, auto_now_add는 생성일자(불변)
+    # created_at = models.DateField(auto_now_add=True)  # auto_now는 수정일자, auto_now_add는 생성일자(불변)
     status = models.CharField(max_length=10)
 
     def __str__(self):
