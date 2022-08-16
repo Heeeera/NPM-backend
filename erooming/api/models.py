@@ -1,14 +1,5 @@
 from django.db import models
 
-
-class User(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=254)
-    
-    def __str__(self):
-      return self.name
-
-
 class Routine(models.Model):
     title = models.CharField(max_length=100)
     max_people_number = models.IntegerField(null=False)

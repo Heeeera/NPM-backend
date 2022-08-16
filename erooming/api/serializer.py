@@ -1,12 +1,5 @@
 from rest_framework import serializers
-from api.models import User, Routine, User_Routine
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ['id', 'name', 'email']
-
+from api.models import Routine, User_Routine
 
 class RoutineSerializer(serializers.ModelSerializer):
     class Meta:
