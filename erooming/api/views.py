@@ -11,8 +11,18 @@ from django.views.decorators.csrf import csrf_exempt
 @api_view(['GET', 'POST'])
 def routine_list(request):
     if request.method == "GET":
+        routine_status = request.GET.get("status", None)
+
         routines = Routine.objects.all()
         serializer = RoutineSerializer(routines, many=True)
+        
+        if routine_status:
+            routines = Routine.objects.filter(status=routine_status)
+            if len(routines) != 0:
+                serializer = RoutineSerializer(routines, many=True)
+                return Response(serializer.data)
+            else:
+                return Response(None)
         return Response(serializer.data)
 
     elif request.method == "POST":
@@ -25,7 +35,7 @@ def routine_list(request):
 
 @csrf_exempt
 @api_view(['PATCH'])
-def routine_list_put(request, pk):
+def routine_list_patch(request, pk):
     if request.method == "PATCH":
         routine = Routine.objects.get(pk=pk)
         data = JSONParser().parse(request)
@@ -63,7 +73,7 @@ def user_routine(request):
     
 @csrf_exempt
 @api_view(['PATCH'])
-def user_routine_put(request, pk):
+def user_routine_patch(request, pk):
     if request.method == "PATCH":
         user_routine = User_Routine.objects.get(pk=pk)
         data = JSONParser().parse(request)
