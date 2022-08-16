@@ -11,8 +11,18 @@ from django.views.decorators.csrf import csrf_exempt
 @api_view(['GET', 'POST'])
 def routine_list(request):
     if request.method == "GET":
+        routine_status = request.GET.get("status", None)
+
         routines = Routine.objects.all()
         serializer = RoutineSerializer(routines, many=True)
+        
+        if routine_status:
+            routines = Routine.objects.filter(status=routine_status)
+            if len(routines) != 0:
+                serializer = RoutineSerializer(routines, many=True)
+                return Response(serializer.data)
+            else:
+                return Response(None)
         return Response(serializer.data)
 
     elif request.method == "POST":
