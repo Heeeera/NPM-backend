@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.mixins import UpdateModelMixin
 from api.models import Routine, User_Routine
 from api.serializer import RoutineSerializer, UserRoutineSerializer
 from django.views.decorators.csrf import csrf_exempt
@@ -23,12 +24,12 @@ def routine_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
-@api_view(['PUT'])
+@api_view(['PATCH'])
 def routine_list_put(request, pk):
-    if request.method == "PUT":
+    if request.method == "PATCH":
         routine = Routine.objects.get(pk=pk)
         data = JSONParser().parse(request)
-        serializer = UserRoutineSerializer(routine, data=data)
+        serializer = RoutineSerializer(routine, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -61,9 +62,9 @@ def user_routine(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @csrf_exempt
-@api_view(['PUT'])
+@api_view(['PATCH'])
 def user_routine_put(request, pk):
-    if request.method == "PUT":
+    if request.method == "PATCH":
         user_routine = User_Routine.objects.get(pk=pk)
         data = JSONParser().parse(request)
         serializer = UserRoutineSerializer(user_routine, data=data)
