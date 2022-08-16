@@ -14,36 +14,25 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
 
-
-BASE_URL = 'http://localhost:8000/'
+state = getattr(settings, 'STATE')
+BASE_URL = 'http://127.0.0.1:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'api/google/callback/'
-# KAKAO_CALLBACK_URI = BASE_URL + 'api/kakao/callback/'
-# GITHUB_CALLBACK_URI = BASE_URL + 'api/github/callback/'
-
-# state = getattr(settings, 'STATE')
-STATE = "random_string"
-
-
 def google_login(request):
     """
     Code Request
     """
     scope = "https://www.googleapis.com/auth/userinfo.email"
-    # client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
-    return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?client_id=81374289536-91p5ar8pe6faf2bsv94uqh5iv5ki3aur.apps.googleusercontent.com&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope=https://www.googleapis.com/auth/userinfo.email")
-
-
+    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
 def google_callback(request):
-    # client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
-    # client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_SECRET")
+    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_SECRET")
     code = request.GET.get('code')
-    # client_id = '81374289536-91p5ar8pe6faf2bsv94uqh5iv5ki3aur.apps.googleusercontent.com'
-    # client_secret = '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'
     """
     Access Token Request
     """
     token_req = requests.post(
-        f"https://oauth2.googleapis.com/token?client_id=81374289536-91p5ar8pe6faf2bsv94uqh5iv5ki3aur.apps.googleusercontent.com&client_secret=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&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}&state=random_string")
+        f"https://oauth2.googleapis.com/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}&state={state}")
     token_req_json = token_req.json()
     error = token_req_json.get("error")
     if error is not None:
@@ -92,8 +81,6 @@ def google_callback(request):
         accept_json = accept.json()
         accept_json.pop('user', None)
         return JsonResponse(accept_json)
-
-
 class GoogleLogin(SocialLoginView):
     adapter_class = google_view.GoogleOAuth2Adapter
     callback_url = GOOGLE_CALLBACK_URI

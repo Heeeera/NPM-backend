@@ -3,3 +3,4 @@ __init__
 __pycache__
 db.sqlite3
 .env
+secrets.json

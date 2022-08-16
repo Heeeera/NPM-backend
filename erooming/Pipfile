@@ -5,6 +5,12 @@ name = "pypi"
 
 [packages]
 django = "==3.2.15"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+django-rest-auth = "*"
+django-allauth = "*"
+dj-rest-auth = "*"
+python-social-auth = "*"
 
 [dev-packages]
 
