@@ -7,6 +7,9 @@ name = "pypi"
 django = "==3.2.15"
 djangorestframework = "*"
 django-cors-headers = "*"
+django-allauth = "*"
+dj-rest-auth = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
