@@ -8,7 +8,7 @@ from rest_framework.reverse import reverse
 from api.models import User, Routine, User_Routine
 from api.serializer import UserSerializer, RoutineSerializer, UserRoutineSerializer
 from django.views.decorators.csrf import csrf_exempt
-
+from django.db.models import Q
 
 @api_view(['GET', 'POST'])
 def users_list(request):
@@ -58,8 +58,18 @@ def routine_list_put(request, pk):
 @api_view(['GET', 'POST'])
 def user_routine(request):
     if request.method == "GET":
+        user_id = request.GET.get('user_id', None)
+        routine_id = request.GET.get('routine_id', None)
+
         user_routines = User_Routine.objects.all()
         serializer = UserRoutineSerializer(user_routines, many=True)
+        if user_id and routine_id:
+            user_routine = User_Routine.objects.filter(user_id=user_id, routine_id=routine_id)
+            if len(user_routine) != 0:
+                serializer = UserRoutineSerializer(user_routine[0])
+                return Response(serializer.data)
+            else:
+                return Response(None)
         return Response(serializer.data)
 
     elif request.method == "POST":
