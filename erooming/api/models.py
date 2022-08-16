@@ -14,10 +14,10 @@ class Routine(models.Model):
     max_people_number = models.IntegerField(null=False)
     now_people_number = models.IntegerField(null=False)
     description = models.CharField(null=False, max_length=200)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    max_count = models.IntegerField()
-    # created_at = models.DateField(auto_now_add=True)  # auto_now는 수정일자, auto_now_add는 생성일자(불변)
+    start_date = models.DateField(null=False)
+    end_date = models.DateField(null=False)
+    max_count = models.IntegerField(null=False)
+    created_at = models.DateField(auto_now_add=True)  # auto_now는 수정일자, auto_now_add는 생성일자(불변)
     status = models.CharField(max_length=10)
 
     def __str__(self):
@@ -29,4 +29,6 @@ class User_Routine(models.Model):
     routine_id = models.IntegerField()
     now_count = models.IntegerField()
     max_count = models.IntegerField()
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
     is_host = models.BooleanField()
