@@ -13,30 +13,39 @@ from allauth.socialaccount.providers.github import views as github_view
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from allauth.socialaccount.models import SocialAccount
 from .models import User
+import os
 
-state = getattr(settings, 'STATE')
+state = "grooinfoest"
 BASE_URL = 'http://127.0.0.1:8000/'
 GOOGLE_CALLBACK_URI = BASE_URL + 'api/google/callback/'
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = google_view.GoogleOAuth2Adapter
+    callback_url = GOOGLE_CALLBACK_URI
+    client_class = OAuth2Client
+
 def google_login(request):
     """
     Code Request
     """
     scope = "https://www.googleapis.com/auth/userinfo.email"
-    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
+    client_id = "81374289536-91p5ar8pe6faf2bsv94uqh5iv5ki3aur.apps.googleusercontent.com"
     return redirect(f"https://accounts.google.com/o/oauth2/v2/auth?client_id={client_id}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
+
+    
 def google_callback(request):
-    client_id = getattr(settings, "SOCIAL_AUTH_GOOGLE_CLIENT_ID")
-    client_secret = getattr(settings, "SOCIAL_AUTH_GOOGLE_SECRET")
+    client_id = "81374289536-91p5ar8pe6faf2bsv94uqh5iv5ki3aur.apps.googleusercontent.com"
+    client_secret = "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"
     code = request.GET.get('code')
     """
     Access Token Request
     """
     token_req = requests.post(
         f"https://oauth2.googleapis.com/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}&state={state}")
-    token_req_json = token_req.json()
+    token_req_json = token_req.json() 
     error = token_req_json.get("error")
     if error is not None:
-        raise JSONDecodeError(error)
+        return JSONDecodeError(error)
     access_token = token_req_json.get('access_token')
     """
     Email Request
@@ -81,28 +90,24 @@ def google_callback(request):
         accept_json = accept.json()
         accept_json.pop('user', None)
         return JsonResponse(accept_json)
-class GoogleLogin(SocialLoginView):
-    adapter_class = google_view.GoogleOAuth2Adapter
-    callback_url = GOOGLE_CALLBACK_URI
-    client_class = OAuth2Client
 
 
 # def kakao_login(request):
 #     rest_api_key = getattr(settings, 'KAKAO_REST_API_KEY')
 #     return redirect(
-#         f"https://kauth.kakao.com/oauth/authorize?client_id={rest_api_key}&redirect_uri={KAKAO_CALLBACK_URI}&response_type=code"
+#         f"https://kauth.kakao.com/oauth/authorize?client_id={rest_api_key}&redirect_url={KAKAO_CALLBACK_URL}&response_type=code"
 #     )
 
 
 # def kakao_callback(request):
 #     rest_api_key = getattr(settings, 'KAKAO_REST_API_KEY')
 #     code = request.GET.get("code")
-#     redirect_uri = KAKAO_CALLBACK_URI
+#     redirect_url = KAKAO_CALLBACK_URL
 #     """
 #     Access Token Request
 #     """
 #     token_req = requests.get(
-#         f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_uri={redirect_uri}&code={code}")
+#         f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={rest_api_key}&redirect_url={redirect_url}&code={code}")
 #     token_req_json = token_req.json()
 #     error = token_req_json.get("error")
 #     if error is not None:
@@ -164,13 +169,13 @@ class GoogleLogin(SocialLoginView):
 # class KakaoLogin(SocialLoginView):
 #     adapter_class = kakao_view.KakaoOAuth2Adapter
 #     client_class = OAuth2Client
-#     callback_url = KAKAO_CALLBACK_URI
+#     callback_url = KAKAO_CALLBACK_URL
 
 
 # def github_login(request):
 #     client_id = getattr(settings, 'SOCIAL_AUTH_GITHUB_KEY')
 #     return redirect(
-#         f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_uri={GITHUB_CALLBACK_URI}"
+#         f"https://github.com/login/oauth/authorize?client_id={client_id}&redirect_url={GITHUB_CALLBACK_URL}"
 #     )
 
 
@@ -182,7 +187,7 @@ class GoogleLogin(SocialLoginView):
 #     Access Token Request
 #     """
 #     token_req = requests.post(
-#         f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}&accept=&json&redirect_uri={GITHUB_CALLBACK_URI}&response_type=code", headers={'Accept': 'application/json'})
+#         f"https://github.com/login/oauth/access_token?client_id={client_id}&client_secret={client_secret}&code={code}&accept=&json&redirect_url={GITHUB_CALLBACK_L}&response_type=code", headers={'Accept': 'application/json'})
 #     token_req_json = token_req.json()
 #     error = token_req_json.get("error")
 #     if error is not None:
@@ -251,7 +256,7 @@ class GoogleLogin(SocialLoginView):
 #     -------------------
 #     """
 #     adapter_class = github_view.GitHubOAuth2Adapter
-#     callback_url = GITHUB_CALLBACK_URI
+#     callback_url = GITHUB_CALLBACK_URL
 #     client_class = OAuth2Client
 
 from rest_framework import viewsets
