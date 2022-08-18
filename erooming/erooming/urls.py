@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include('api.urls'), name="api"),
     path('dj-rest-auth/google/', views.GoogleLogin.as_view(), name='google_login'),
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
     re_path(r'^accounts/', include('allauth.urls'), name='socialaccount_signup'),
 ]
