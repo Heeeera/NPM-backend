@@ -76,12 +76,17 @@ def user_routine(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 @csrf_exempt
-@api_view(['PATCH'])
+@api_view(['GET', 'PATCH'])
 def user_routine_patch(request, pk):
-    if request.method == "PATCH":
+    if request.method == "GET":
+        user_routine = User_Routine.objects.get(pk=pk)
+        serializer = UserRoutineSerializer(user_routine)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+    elif request.method == "PATCH":
         user_routine = User_Routine.objects.get(pk=pk)
         data = JSONParser().parse(request)
-        serializer = UserRoutineSerializer(user_routine, data=data)
+        serializer = UserRoutineSerializer(user_routine, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
