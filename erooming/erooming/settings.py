@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 
     'api.apps.ApiConfig',
+    'social_login.apps.SocialLoginConfig',
 ]
 
 REST_FRAMEWORK = {
