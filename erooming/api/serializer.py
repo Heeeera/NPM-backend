@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from api.models import Routine, User_Routine
+from allauth.socialaccount.models import SocialAccount
 
 class RoutineSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,3 +14,9 @@ class UserRoutineSerializer(serializers.ModelSerializer):
         model = User_Routine
         fields = ['id', 'user_id', 'routine_id',
                   'now_count', 'max_count', 'created_at', 'updated_at', 'is_host']
+
+
+class SocialAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialAccount
+        fields = ['id', 'provider', 'uid', 'last_login', 'date_joined', 'user_id', 'extra_data']
