@@ -1,11 +1,15 @@
+import profile
 from rest_framework import status
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.mixins import UpdateModelMixin
 from api.models import Routine, User_Routine
-from api.serializer import RoutineSerializer, UserRoutineSerializer
+from api.serializer import RoutineSerializer, UserRoutineSerializer, SocialAccountSerializer
 from django.views.decorators.csrf import csrf_exempt
+from allauth.socialaccount.models import SocialAccount
+from django.http import JsonResponse
+import json
 
 @csrf_exempt
 @api_view(['GET', 'POST'])
@@ -87,4 +91,21 @@ def user_routine_patch(request, pk):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
+@api_view(['GET'])
+def social_account_profile(request, pk):
+    if request.method == "GET":
+        social_account = SocialAccount.objects.get(user=pk)
+        serializer = SocialAccountSerializer(social_account)
+        
+        extra_data = serializer.data['extra_data']
+        profile_url = ""
+        for el in extra_data.split("'"):
+            if "https" in el:
+                profile_url = el
+        
+        response = {"profile_url" : profile_url}
+        return Response(response)
+        
 
