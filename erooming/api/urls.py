@@ -7,4 +7,5 @@ urlpatterns=[
     path('routine/<int:pk>',views.routine_list_patch, name="api-routines-put"),
     path('user_routine/', views.user_routine, name="api-user-routine"),
     path('user_routine/<int:pk>', views.user_routine_patch, name="api-user-routine-put"),
+    path('social_account_profile/<int:pk>', views.social_account_profile, name="api-social-account-profile"),
 ]
