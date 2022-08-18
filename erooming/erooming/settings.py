@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',      # django-cors-headers  
@@ -45,17 +48,27 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
+    
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
     'api.apps.ApiConfig',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+    )
+}
+
 SITE_ID = 1
 
 REST_USE_JWT = True
+
+JWT_AUTH_COOKIE = 'my-app-auth'
+JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
+
+ACCOUNT_LOGOUT_ON_GET = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -186,3 +199,6 @@ CORS_ALLOW_CREDENTIALS = True
 #     'csrftoken',
 #     'x-requested-with',
 # ]
+
+SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None
