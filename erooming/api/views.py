@@ -89,6 +89,20 @@ def user_routine_patch(request, pk):
 
 @csrf_exempt
 @api_view(['GET'])
+def user_routine_list(request,pk):
+    if request.method == "GET":
+        user_routine = User_Routine.objects.filter(user_id=pk)
+        if(user_routine !=0):
+            serializer = UserRoutineSerializer(user_routine, many=True)
+            return_list = []
+            for userAndRoutine in serializer.data:
+                routine_model = Routine.objects.filter(id=userAndRoutine['routine_id'])
+                serial = RoutineSerializer(routine_model[0])
+                return_list.append(serial.data)
+            return Response(return_list)
+
+@csrf_exempt
+@api_view(['GET'])
 def social_account_profile(request, pk):
     if request.method == "GET":
         social_account = SocialAccount.objects.get(user=pk)
@@ -103,4 +117,3 @@ def social_account_profile(request, pk):
         response = {"profile_url" : profile_url}
         return Response(response)
         
-
