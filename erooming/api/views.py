@@ -74,7 +74,20 @@ def user_routine(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
+@csrf_exempt
+@api_view(['GET'])
+def all_user_routines(request):
+    if request.method == "GET":
+        routine_id = request.GET.get('routine_id', None)
+        if routine_id:
+            user_routine = User_Routine.objects.filter(routine_id=routine_id)
+            if len(user_routine) != 0:
+                serializer = UserRoutineSerializer(user_routine, many=True)
+                return Response(serializer.data)
+            else:
+                return Response(None)
+
 @csrf_exempt
 @api_view(['GET', 'PATCH'])
 def user_routine_patch(request, pk):
