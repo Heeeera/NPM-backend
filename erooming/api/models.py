@@ -23,3 +23,6 @@ class User_Routine(models.Model):
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
     is_host = models.BooleanField()
+    profile_url = models.CharField(null=False, max_length=300)
+    username = models.CharField(null=False, max_length=100)
+

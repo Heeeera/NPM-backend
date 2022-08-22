@@ -13,7 +13,7 @@ class UserRoutineSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Routine
         fields = ['id', 'user_id', 'routine_id',
-                  'now_count', 'max_count', 'created_at', 'updated_at', 'is_host']
+                  'now_count', 'max_count', 'created_at', 'updated_at', 'is_host', 'profile_url', 'username']
 
 
 class SocialAccountSerializer(serializers.ModelSerializer):
