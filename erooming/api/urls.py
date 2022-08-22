@@ -10,4 +10,5 @@ urlpatterns=[
     path('all_user_routines/', views.all_user_routines, name="api-personal-routine"),
     path('social_account_profile/<int:pk>', views.social_account_profile, name="api-social-account-profile"),
     path('user_routine_list/<int:pk>',views.user_routine_list, name="api-user-routine-list"),
+    path('user_routine_delete/<int:rk>/<int:uk>',views.user_routine_delete, name="api-user-routine-delete")
 ]

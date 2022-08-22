@@ -107,10 +107,13 @@ def user_routine_patch(request, pk):
 
 @csrf_exempt
 @api_view(['DELETE'])
-def user_routine_delete(request, uk, rk):
+def user_routine_delete(request,rk,uk):
     if request.method =="DELETE":
-        user_routine = User_Routine.objects.filter(user_id=uk, routine_id=rk)
+        user_routine = User_Routine.objects.filter(routine_id=rk, user_id=uk)
         user_routine.delete()
+        routine = Routine.objects.get(id=rk)
+        routine.now_people_number = routine.now_people_number -1
+        routine.save()
         return Response("Deleted", status=status.HTTP_200_OK)
     return Response("ERROR",status=status.HTTP_400_BAD_REQUEST)
 
