@@ -106,6 +106,15 @@ def user_routine_patch(request, pk):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @csrf_exempt
+@api_view(['DELETE'])
+def user_routine_delete(request, uk, rk):
+    if request.method =="DELETE":
+        user_routine = User_Routine.objects.filter(user_id=uk, routine_id=rk)
+        user_routine.delete()
+        return Response("Deleted", status=status.HTTP_200_OK)
+    return Response("ERROR",status=status.HTTP_400_BAD_REQUEST)
+
+@csrf_exempt
 @api_view(['GET'])
 def user_routine_list(request,pk):
     if request.method == "GET":
