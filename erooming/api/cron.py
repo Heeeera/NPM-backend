@@ -1,4 +1,3 @@
-from turtle import update
 from apscheduler.schedulers.background import BackgroundScheduler
 from .models import Routine
 from datetime import datetime, date
