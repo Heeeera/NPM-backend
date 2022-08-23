@@ -10,6 +10,8 @@ django-cors-headers = "*"
 django-allauth = "*"
 dj-rest-auth = "*"
 djangorestframework-simplejwt = "*"
+apscheduler = "*"
+django-apscheduler = "*"
 
 [dev-packages]
 

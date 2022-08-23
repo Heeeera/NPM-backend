@@ -55,7 +55,13 @@ INSTALLED_APPS = [
 
     'api.apps.ApiConfig',
     'social_login.apps.SocialLoginConfig',
+
+    'django_apscheduler',
 ]
+
+#djangfo_apscheduler
+APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"  # Default
+SCHEDULER_DEFAULT = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
