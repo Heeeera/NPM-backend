@@ -10,6 +10,9 @@ def update_routine_status():
         if(routine.status == 'ready' and routine.start_date <= date.today()) :
             routine.status = 'active'
             routine.save()
+        elif(routine.status == 'active' and routine.end_date <= date.today()) :
+            routine.status = 'completed'
+            routine.save()
 
 def main():
     sched = BackgroundScheduler()
