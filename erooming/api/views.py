@@ -60,7 +60,7 @@ def user_routine(request):
         user_routines = User_Routine.objects.all()
         serializer = UserRoutineSerializer(user_routines, many=True)
         if user_id and routine_id:
-            user_routine = User_Routine.objects.filter(user_id=user_id, routine_id=routine_id)
+            user_routine = User_Routine.objects.filter(user_id=user_id).filter(routine_id=routine_id)
             if len(user_routine) != 0:
                 serializer = UserRoutineSerializer(user_routine[0])
                 return Response(serializer.data)
